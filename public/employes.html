@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Employés</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #232663, #02031b);
+            color: #fbf4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: rgba(239, 228, 228, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 90%;
+            max-width: 1000px;
+            color: #333;
+        }
+
+        h1 {
+            color: #000dff;
+            text-align: center;
+        }
+
+        #employeeList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #employeeList li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        #employeeList li:hover {
+            background-color: #ddd;
+        }
+
+        /* Style pour les détails */
+        details {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: #000dff;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Liste des Employés</h1>
+        <ul id="employeeList"></ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fonction pour charger la liste des employés
+            function loadEmployeeList() {
+                $.getJSON('employees.php', function(data) {
+                    var $list = $('#employeeList');
+                    $list.empty();
+                    $.each(data, function(index, value) {
+                        var $details = $('<details>').append(
+                            $('<summary>').text((index) + '. ' + value.nom + ' ' + value.prenom)
+                        );
+                        $details.on('click', function() {
+                            if (!$details.data('loaded')) {
+                                loadEmployeeDetails(index, $details);
+                            }
+                        });
+                        $list.append($('<li>').append($details));
+                    });
+                });
+            }
+
+            // Fonction pour charger les détails d'un employé
+            function loadEmployeeDetails(employeeId, $details) {
+                $.getJSON('employees.php?employee_id=' + employeeId, function(data) {
+                    if (data.error) {
+                        $details.append('<p>' + data.error + '</p>');
+                    } else {
+                        var detailsHtml = '<h3>Détails de l\'employé</h3>' +
+                                          '<p>Nom: ' + data.nom + '</p>' +
+                                          '<p>Prénom: ' + data.prenom + '</p>' +
+                                          '<p>Âge: ' + data.age + '</p>' +
+                                          '<p>Statut: ' + data.statut + '</p>' +
+                                          '<p>Salaire: ' + data.salaire + '</p>' +
+                                          '<p>Adresse: ' + data.adresse + '</p>' +
+                                          '<p>N° Sécu Sociale: ' + data.n_secu + '</p>' +
+                                          '<p>Username: ' + data.username + '</p>' +
+                                          '<p>IP Machine de Dev: ' + data.ip + '</p>';
+                        $details.append(detailsHtml);
+                        $details.data('loaded', true);
+                    }
+                });
+            }
+
+            // Charger la liste des employés au chargement de la page
+            loadEmployeeList();
+        });
+    </script>
+</body>
+</html>

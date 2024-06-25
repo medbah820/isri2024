@@ -1,0 +1,25 @@
+{
+  "name": "my-node-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "build": "echo 'Building the project...'",
+    "lint": "eslint --config eslint.config.mjs ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.0.1",
+    "@eslint/js": "^8.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.34.2",
+    "globals": "^15.3.0"
+  }
+}
